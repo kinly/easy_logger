@@ -64,7 +64,8 @@ namespace util { namespace logger {
     };
 
     static constexpr char key_default[] = "default";
-    static easy_logger_options options_default = easy_logger_options(key_default, "logs/log.log", "", 39969);
+    static constexpr uint16_t mask_default = 39969;
+    static easy_logger_options options_default = easy_logger_options(key_default, "logs/log.log", "", mask_default);
 
     class easy_logger_static
     {
@@ -245,35 +246,57 @@ namespace util { namespace logger {
 #define __FILENAME__ (util::logger::easy_logger_static::get_shortname(__FILE__))
 
 // use fmt lib, e.g. LOG_TRACE("warn log, {1}, {1}, {2}", 1, 2);
-#define LOG_TRACE(key, msg,...) { if (util::logger::easy_logger_static::should_log(spdlog::level::trace))    util::logger::easy_logger<key>::get().log({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::trace,    msg, ##__VA_ARGS__); };
-#define LOG_DEBUG(key, msg,...) { if (util::logger::easy_logger_static::should_log(spdlog::level::debug))    util::logger::easy_logger<key>::get().log({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::debug,    msg, ##__VA_ARGS__); };
-#define LOG_INFO(key, msg,...)  { if (util::logger::easy_logger_static::should_log(spdlog::level::info))     util::logger::easy_logger<key>::get().log({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::info,     msg, ##__VA_ARGS__); };
-#define LOG_WARN(key, msg,...)  { if (util::logger::easy_logger_static::should_log(spdlog::level::warn))     util::logger::easy_logger<key>::get().log({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::warn,     msg, ##__VA_ARGS__); };
-#define LOG_ERROR(key, msg,...) { if (util::logger::easy_logger_static::should_log(spdlog::level::err))      util::logger::easy_logger<key>::get().log({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::err,      msg, ##__VA_ARGS__); };
-#define LOG_CRIT(key, msg,...)  { if (util::logger::easy_logger_static::should_log(spdlog::level::critical)) util::logger::easy_logger<key>::get().log({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::critical, msg, ##__VA_ARGS__); };
+#define LOG_KEY_TRACE(key, msg,...) { if (util::logger::easy_logger_static::should_log(spdlog::level::trace))    util::logger::easy_logger<key>::get().log({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::trace,    msg, ##__VA_ARGS__); };
+#define LOG_KEY_DEBUG(key, msg,...) { if (util::logger::easy_logger_static::should_log(spdlog::level::debug))    util::logger::easy_logger<key>::get().log({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::debug,    msg, ##__VA_ARGS__); };
+#define LOG_KEY_INFO(key, msg,...)  { if (util::logger::easy_logger_static::should_log(spdlog::level::info))     util::logger::easy_logger<key>::get().log({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::info,     msg, ##__VA_ARGS__); };
+#define LOG_KEY_WARN(key, msg,...)  { if (util::logger::easy_logger_static::should_log(spdlog::level::warn))     util::logger::easy_logger<key>::get().log({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::warn,     msg, ##__VA_ARGS__); };
+#define LOG_KEY_ERROR(key, msg,...) { if (util::logger::easy_logger_static::should_log(spdlog::level::err))      util::logger::easy_logger<key>::get().log({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::err,      msg, ##__VA_ARGS__); };
+#define LOG_KEY_CRIT(key, msg,...)  { if (util::logger::easy_logger_static::should_log(spdlog::level::critical)) util::logger::easy_logger<key>::get().log({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::critical, msg, ##__VA_ARGS__); };
 
 // use like sprintf, e.g. PRINT_TRACE("warn log, %d-%d", 1, 2);
-#define PRINT_TRACE(key, msg,...) { if (util::logger::easy_logger_static::should_log(spdlog::level::trace))    util::logger::easy_logger<key>::get().print({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::trace,    msg, ##__VA_ARGS__); };
-#define PRINT_DEBUG(key, msg,...) { if (util::logger::easy_logger_static::should_log(spdlog::level::debug))    util::logger::easy_logger<key>::get().print({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::debug,    msg, ##__VA_ARGS__); };
-#define PRINT_INFO(key, msg,...)  { if (util::logger::easy_logger_static::should_log(spdlog::level::info))     util::logger::easy_logger<key>::get().print({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::info,     msg, ##__VA_ARGS__); };
-#define PRINT_WARN(key, msg,...)  { if (util::logger::easy_logger_static::should_log(spdlog::level::warn))     util::logger::easy_logger<key>::get().print({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::warn,     msg, ##__VA_ARGS__); };
-#define PRINT_ERROR(key, msg,...) { if (util::logger::easy_logger_static::should_log(spdlog::level::err))      util::logger::easy_logger<key>::get().print({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::err,      msg, ##__VA_ARGS__); };
-#define PRINT_CRIT(key, msg,...)  { if (util::logger::easy_logger_static::should_log(spdlog::level::critical)) util::logger::easy_logger<key>::get().print({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::critical, msg, ##__VA_ARGS__); };
+#define PRINT_KEY_TRACE(key, msg,...) { if (util::logger::easy_logger_static::should_log(spdlog::level::trace))    util::logger::easy_logger<key>::get().print({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::trace,    msg, ##__VA_ARGS__); };
+#define PRINT_KEY_DEBUG(key, msg,...) { if (util::logger::easy_logger_static::should_log(spdlog::level::debug))    util::logger::easy_logger<key>::get().print({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::debug,    msg, ##__VA_ARGS__); };
+#define PRINT_KEY_INFO(key, msg,...)  { if (util::logger::easy_logger_static::should_log(spdlog::level::info))     util::logger::easy_logger<key>::get().print({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::info,     msg, ##__VA_ARGS__); };
+#define PRINT_KEY_WARN(key, msg,...)  { if (util::logger::easy_logger_static::should_log(spdlog::level::warn))     util::logger::easy_logger<key>::get().print({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::warn,     msg, ##__VA_ARGS__); };
+#define PRINT_KEY_ERROR(key, msg,...) { if (util::logger::easy_logger_static::should_log(spdlog::level::err))      util::logger::easy_logger<key>::get().print({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::err,      msg, ##__VA_ARGS__); };
+#define PRINT_KEY_CRIT(key, msg,...)  { if (util::logger::easy_logger_static::should_log(spdlog::level::critical)) util::logger::easy_logger<key>::get().print({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::critical, msg, ##__VA_ARGS__); };
 
 // operator << 优先级比 == 高...
 #define __HIDE_STM_LOGGER(key, lvl) util::logger::easy_logger_static::should_log(lvl) && util::logger::log_stream<key>({__FILENAME__, __LINE__, __FUNCTION__}, lvl) == util::logger::log_line()
 // use like stream, e.g. STM_TRACE() << "warn log: " << 1;
-#define STM_TRACE(key) __HIDE_STM_LOGGER(key, spdlog::level::trace)
-#define STM_DEBUG(key) __HIDE_STM_LOGGER(key, spdlog::level::debug)
-#define STM_INFO(key)  __HIDE_STM_LOGGER(key, spdlog::level::info)
-#define STM_WARN(key)  __HIDE_STM_LOGGER(key, spdlog::level::warn)
-#define STM_ERROR(key) __HIDE_STM_LOGGER(key, spdlog::level::err)
-#define STM_CRIT(key)  __HIDE_STM_LOGGER(key, spdlog::level::critical)
+#define STM_KEY_TRACE(key) __HIDE_STM_LOGGER(key, spdlog::level::trace)
+#define STM_KEY_DEBUG(key) __HIDE_STM_LOGGER(key, spdlog::level::debug)
+#define STM_KEY_INFO(key)  __HIDE_STM_LOGGER(key, spdlog::level::info)
+#define STM_KEY_WARN(key)  __HIDE_STM_LOGGER(key, spdlog::level::warn)
+#define STM_KEY_ERROR(key) __HIDE_STM_LOGGER(key, spdlog::level::err)
+#define STM_KEY_CRIT(key)  __HIDE_STM_LOGGER(key, spdlog::level::critical)
 
 // use inner stream, e.g. ISTM_TRACE("warn log: " << 1 << "-" << 2)
-#define ISTM_TRACE(key, msg) __HIDE_STM_LOGGER(key, spdlog::level::trace) << msg
-#define ISTM_DEBUG(key, msg) __HIDE_STM_LOGGER(key, spdlog::level::debug) << msg
-#define ISTM_INFO(key, msg)  __HIDE_STM_LOGGER(key, spdlog::level::info) << msg
-#define ISTM_WARN(key, msg)  __HIDE_STM_LOGGER(key, spdlog::level::warn) << msg
-#define ISTM_ERROR(key, msg) __HIDE_STM_LOGGER(key, spdlog::level::err) << msg
-#define ISTM_CRIT(key, msg)  __HIDE_STM_LOGGER(key, spdlog::level::critical) << msg
+#define ISTM_KEY_TRACE(key, msg) __HIDE_STM_LOGGER(key, spdlog::level::trace) << msg
+#define ISTM_KEY_DEBUG(key, msg) __HIDE_STM_LOGGER(key, spdlog::level::debug) << msg
+#define ISTM_KEY_INFO(key, msg)  __HIDE_STM_LOGGER(key, spdlog::level::info) << msg
+#define ISTM_KEY_WARN(key, msg)  __HIDE_STM_LOGGER(key, spdlog::level::warn) << msg
+#define ISTM_KEY_ERROR(key, msg) __HIDE_STM_LOGGER(key, spdlog::level::err) << msg
+#define ISTM_KEY_CRIT(key, msg)  __HIDE_STM_LOGGER(key, spdlog::level::critical) << msg
+
+// default
+#define LOG_TRACE(msg,...) { if (util::logger::easy_logger_static::should_log(spdlog::level::trace))    util::logger::easy_logger<util::logger::key_default>::get().log({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::trace,    msg, ##__VA_ARGS__); };
+#define LOG_DEBUG(msg,...) { if (util::logger::easy_logger_static::should_log(spdlog::level::debug))    util::logger::easy_logger<util::logger::key_default>::get().log({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::debug,    msg, ##__VA_ARGS__); };
+#define LOG_INFO(msg,...)  { if (util::logger::easy_logger_static::should_log(spdlog::level::info))     util::logger::easy_logger<util::logger::key_default>::get().log({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::info,     msg, ##__VA_ARGS__); };
+#define LOG_WARN(msg,...)  { if (util::logger::easy_logger_static::should_log(spdlog::level::warn))     util::logger::easy_logger<util::logger::key_default>::get().log({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::warn,     msg, ##__VA_ARGS__); };
+#define LOG_ERROR(msg,...) { if (util::logger::easy_logger_static::should_log(spdlog::level::err))      util::logger::easy_logger<util::logger::key_default>::get().log({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::err,      msg, ##__VA_ARGS__); };
+#define LOG_CRIT(msg,...)  { if (util::logger::easy_logger_static::should_log(spdlog::level::critical)) util::logger::easy_logger<util::logger::key_default>::get().log({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::critical, msg, ##__VA_ARGS__); };
+
+#define PRINT_TRACE(msg,...) { if (util::logger::easy_logger_static::should_log(spdlog::level::trace))    util::logger::easy_logger<util::logger::key_default>::get().print({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::trace,    msg, ##__VA_ARGS__); };
+#define PRINT_DEBUG(msg,...) { if (util::logger::easy_logger_static::should_log(spdlog::level::debug))    util::logger::easy_logger<util::logger::key_default>::get().print({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::debug,    msg, ##__VA_ARGS__); };
+#define PRINT_INFO(msg,...)  { if (util::logger::easy_logger_static::should_log(spdlog::level::info))     util::logger::easy_logger<util::logger::key_default>::get().print({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::info,     msg, ##__VA_ARGS__); };
+#define PRINT_WARN(msg,...)  { if (util::logger::easy_logger_static::should_log(spdlog::level::warn))     util::logger::easy_logger<util::logger::key_default>::get().print({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::warn,     msg, ##__VA_ARGS__); };
+#define PRINT_ERROR(msg,...) { if (util::logger::easy_logger_static::should_log(spdlog::level::err))      util::logger::easy_logger<util::logger::key_default>::get().print({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::err,      msg, ##__VA_ARGS__); };
+#define PRINT_CRIT(msg,...)  { if (util::logger::easy_logger_static::should_log(spdlog::level::critical)) util::logger::easy_logger<util::logger::key_default>::get().print({__FILENAME__, __LINE__, __FUNCTION__}, spdlog::level::critical, msg, ##__VA_ARGS__); };
+
+#define STM_TRACE() __HIDE_STM_LOGGER(util::logger::key_default, spdlog::level::trace)
+#define STM_DEBUG() __HIDE_STM_LOGGER(util::logger::key_default, spdlog::level::debug)
+#define STM_INFO()  __HIDE_STM_LOGGER(util::logger::key_default, spdlog::level::info)
+#define STM_WARN()  __HIDE_STM_LOGGER(util::logger::key_default, spdlog::level::warn)
+#define STM_ERROR() __HIDE_STM_LOGGER(util::logger::key_default, spdlog::level::err)
+#define STM_CRIT()  __HIDE_STM_LOGGER(util::logger::key_default, spdlog::level::critical)
