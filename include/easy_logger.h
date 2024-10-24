@@ -238,9 +238,9 @@ namespace util::logger {
          * Log with source location and level.
          * Params: source location, log level, format string, and format string arguments.
          */
-        void log(const spdlog::source_loc& loc, spdlog::level::level_enum lvl, const char* fmt, const Args &... args)
+        void log(const spdlog::source_loc& loc, spdlog::level::level_enum lvl, const std::format_string<Args...> fmt, Args &&... args)
         {
-            spdlog::get(Key)->log(loc, lvl, fmt, args...);
+            spdlog::get(Key)->log(loc, lvl, fmt, std::forward<Args>(args)...);
         }
 
         template <typename... Args>
