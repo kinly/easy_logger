@@ -1,3 +1,9 @@
+# 2024-10-24 bug fixed:
+- c++20 编译问题：'std::basic_format_string<char,const int &>::basic_format_string': call to immediate function is not a constant expression
+- https://www.reddit.com/r/cpp_questions/comments/1aohxk8/stdformat_error_call_to_consteval_function/
+![image](https://github.com/user-attachments/assets/b9bc2ffd-bad6-485e-bc97-66db69699eb7)
+- https://en.cppreference.com/w/cpp/utility/format/format
+
 # easy_logger
 
 - 基于 spdlog 的易用封装
