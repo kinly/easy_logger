@@ -115,32 +115,31 @@ struct type_format_string_placeholders {
 //////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
 /// test code
-namespace auto_format_rules {
-namespace detail {
-struct test_struct {
-  
-};
-
-template<>
-struct type_format<test_struct> {
-  static constexpr const char* value = "struct:{}";
-};
-}  // namespace detail
-}  // namespace auto_format_rules
-
-void test_auto_format_rules() {
-  constexpr auto fmt = auto_format_rules::detail::make_type_format_string_ct<float, int, float, float>();
-  std::string_view sv(fmt.first.data(), fmt.second);
-  float a = 1.2345f, c = 3.14f, d = 2.71f;
-  int b = 42;
-  std::string result = std::vformat(sv, std::make_format_args(a, b, c, d));
-  std::cout << "Formatted: " << result << '\n';
-
-  auto fmt_st = auto_format_rules::detail::make_type_format_string_ct<auto_format_rules::detail::test_struct>();
-
-  static constexpr auto fmt2 = auto_format_rules::detail::type_format_string_placeholders<>::sv;
-  static constexpr auto fmt3 = auto_format_rules::detail::type_format_string_placeholders<>::sv;
-  std::cout << fmt2.data() << std::endl;
-  std::cout << fmt3.data() << std::endl;
-}
-
+// namespace auto_format_rules {
+// namespace detail {
+// struct test_struct {
+//
+// };
+//
+// template<>
+// struct type_format<test_struct> {
+//   static constexpr const char* value = "struct:{}";
+// };
+// }  // namespace detail
+// }  // namespace auto_format_rules
+//
+// void test_auto_format_rules() {
+//   constexpr auto fmt = auto_format_rules::detail::make_type_format_string_ct<float, int, float, float>();
+//   std::string_view sv(fmt.first.data(), fmt.second);
+//   float a = 1.2345f, c = 3.14f, d = 2.71f;
+//   int b = 42;
+//   std::string result = std::vformat(sv, std::make_format_args(a, b, c, d));
+//   std::cout << "Formatted: " << result << '\n';
+//
+//   auto fmt_st = auto_format_rules::detail::make_type_format_string_ct<auto_format_rules::detail::test_struct>();
+//
+//   static constexpr auto fmt2 = auto_format_rules::detail::type_format_string_placeholders<>::sv;
+//   static constexpr auto fmt3 = auto_format_rules::detail::type_format_string_placeholders<>::sv;
+//   std::cout << fmt2.data() << std::endl;
+//   std::cout << fmt3.data() << std::endl;
+// }
