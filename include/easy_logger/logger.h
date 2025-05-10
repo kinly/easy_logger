@@ -22,6 +22,9 @@
 
 #include <memory>
 #include <thread>
+#include <format>
+#include <iostream>
+#include <filesystem>
 
 // #include "auto_format_rules.h"
 
@@ -147,9 +150,14 @@ class easy_logger final : public easy_logger_static {
    * be a compile-time constant, or the compile-time check needs to be avoided,
    * use std::vformat or std::runtime_format on fmt(since C++26) instead.
    */
+  // template <class... args_tt>
+  // static void log(const spdlog::source_loc &loc, spdlog::level::level_enum lvl,
+  //   const std::format_string<args_tt...> fmt, args_tt &&...args) {
+  //   spdlog::log(loc, lvl, fmt, std::forward<args_tt>(args)...);
+  // }
   template <class... args_tt>
   static void log(const spdlog::source_loc &loc, spdlog::level::level_enum lvl,
-    const std::format_string<args_tt...> fmt, args_tt &&...args) {
+    const char *fmt, args_tt &&...args) {
     spdlog::log(loc, lvl, fmt, std::forward<args_tt>(args)...);
   }
 
@@ -170,7 +178,7 @@ class easy_logger final : public easy_logger_static {
   template <size_t count_vv, char sep_vv = ' '>
   struct format_string_placeholders {
     static constexpr auto arr = make_format_string_placeholders<count_vv, sep_vv>();
-    static constexpr auto str = std::string_view{std::data(arr), count_vv * 3};
+    static constexpr auto sv = std::string_view{std::data(arr), count_vv > 0 ? count_vv * 3 - 1 : 0};
   };
 
   template <typename... args_tt>

@@ -6,5 +6,5 @@ TEST(LoggerTest, BasicLogging) {
     util::logger::easy_logger::get().init("test.log");
 
     LOG_INFO("Test message");
-    STM_INFO<','>(1, 2, 3);
+    STM_INFO(1, 2, 3);
 }
