@@ -1,0 +1,58 @@
+---
+description:
+globs: *.hpp,*.h,*.cpp,*.c
+alwaysApply: false
+---
+# C++ 开发规范 (Cursor Rules)
+
+## 代码风格规范
+
+```
+# .clang-format 配置
+Language: Cpp
+BasedOnStyle: Google
+IndentWidth: 2
+TabWidth: 2
+ContinuationIndentWidth: 2
+UseTab: Never
+AlignAfterOpenBracket: DontAlign
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortBlocksOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+ColumnLimit: 120
+FixNamespaceComments: true
+ShortNamespaceLines: 0
+```
+
+## 命名规范
+
+1. **通用规则**:
+   - 使用下划线命名法 (snake_case)
+   - 类型名、变量名、函数名均采用小写加下划线
+
+2. **类成员变量**:
+   - 数据成员以下划线 (`_`) 开头
+   - 在类结构中，数据成员放在最上面
+
+3. **模板参数命名**:
+   - 类型参数以 `_tt` 结尾
+   - 非类型参数以 `_vv` 结尾
+   - 单独的类型参数可简化为 `tt`
+
+## 目录组织规范
+
+1. **模块化组织**:
+   - 每个模块一个目录，以模块名为目录名
+   - 目录中包含 .hpp 和 .cpp 文件
+
+2. **特殊目录**:
+   - `util`: 存放通用工具模块
+   - `3rd`: 存放第三方依赖库
+   - `cmake`: 存放CMake配置文件
+     - build.cmake: 构建配置
+     - develop.cmake: 开发配置
+     - 3rd.xxx.cmake: 第三方库配置
+     - cmake 里第三方依赖库总是使用 gitsubmodule 方式而不是 findpackage
