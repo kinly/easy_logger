@@ -23,7 +23,7 @@
 #include <memory>
 #include <thread>
 
-#include "auto_format_rules.h"
+// #include "auto_format_rules.h"
 
 #ifdef __cpp_lib_source_location
 #include <source_location>
@@ -159,33 +159,33 @@ class easy_logger final : public easy_logger_static {
     spdlog::log(loc, lvl, fmt::sprintf(fmt, args...).c_str());
   }
 
-  // template <std::size_t count_vv>
-  // static constexpr auto generate_placeholders() {
-  //   std::array<char, count_vv * 3> placeholders = {};
-  //   for (std::size_t i = 0; i < count_vv; ++i) {
-  //     placeholders[i * 3] = '{';
-  //     placeholders[i * 3 + 1] = '}';
-  //     if (i < count_vv - 1) {
-  //       placeholders[i * 3 + 2] = ' ';
-  //     }
-  //   }
-  //   return placeholders;
-  // }
-  // template <typename... args_tt>
-  // static void stm(const spdlog::source_loc &loc, spdlog::level::level_enum lvl, args_tt &&...args) {
-  //   constexpr std::size_t args_size = sizeof...(args);
-  //   auto test_string = generate_placeholders<args_size>();
-  //   spdlog::log(loc, lvl,
-  //     std::format(std::string_view(std::data(generate_placeholders<args_size>()), args_size * 3),
-  //       std::forward<args_tt>(args)...));
-  // }
+  // via: https://stackoverflow.com/a/76429895/21686566
+  template <size_t count_vv, char sep_vv = ' '>
+  static consteval auto make_format_string_placeholders() -> std::array<char, count_vv * 3 + 1> {
+    return []<size_t... index_vv>(std::integer_sequence<size_t, index_vv...> &&) {
+      return std::array<char, count_vv * 3 + 1>{(index_vv % 3 == 0 ? '{' : index_vv % 3 == 1 ? '}' : sep_vv)..., '\0'};
+    }(std::make_index_sequence<count_vv * 3>{});
+  }
+
+  template <size_t count_vv, char sep_vv = ' '>
+  struct format_string_placeholders {
+    static constexpr auto arr = make_format_string_placeholders<count_vv, sep_vv>();
+    static constexpr auto str = std::string_view{std::data(arr), count_vv * 3};
+  };
 
   template <typename... args_tt>
   static void stm(const spdlog::source_loc &loc, spdlog::level::level_enum lvl, args_tt &&...args) {
-    spdlog::log(loc, lvl,
-      std::format(
-        auto_format_rules::detail::type_format_string_placeholders<args_tt...>::sv, std::forward<args_tt>(args)...));
+    spdlog::log(loc, lvl, std::format(format_string_placeholders<sizeof...(args)>::sv, std::forward<args_tt>(args)...));
+    // example:using | as separator
+    // spdlog::log(loc, lvl, std::format(format_string_placeholders<sizeof...(args), '|'>::sv, std::forward<args_tt>(args)...));
   }
+
+  // template <typename... args_tt>
+  // static void stm_test(const spdlog::source_loc &loc, spdlog::level::level_enum lvl, args_tt &&...args) {
+  //   spdlog::log(loc, lvl,
+  //     std::format(
+  //       auto_format_rules::detail::type_format_string_placeholders<args_tt...>::sv, std::forward<args_tt>(args)...));
+  // }
 
  private:
   easy_logger() = default;
