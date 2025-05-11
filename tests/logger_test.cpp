@@ -2,7 +2,6 @@
 #include <gtest/gtest.h>
 
 TEST(LoggerTest, BasicLogging) {
-    util::logger::easy_logger::init();
     util::logger::easy_logger::get().init("test.log");
 
     LOG_INFO("Test message");
