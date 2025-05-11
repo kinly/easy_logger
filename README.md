@@ -53,7 +53,6 @@ g++ -Ieasy_logger/include -Ieasy_logger/3rd/spdlog/include your_code.cpp
 #include <easy_logger/logger.h>
 
 int main() {
-    util::logger::easy_logger::init();
     util::logger::easy_logger::get().init("app.log");
 
     LOG_INFO("Hello, {}!", "World");
