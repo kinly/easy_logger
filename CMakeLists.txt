@@ -9,6 +9,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 option(EASY_LOGGER_BUILD_TESTS "Build tests" OFF)  # 暂时禁用测试
 option(EASY_LOGGER_BUILD_EXAMPLES "Build examples" ON)
 
+# 添加项目根目录到预处理器定义
+add_compile_definitions(PROJECT_ROOT_DIR="${CMAKE_SOURCE_DIR}")
+
 # 安装配置
 include(GNUInstallDirs)
 

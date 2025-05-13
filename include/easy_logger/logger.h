@@ -77,6 +77,17 @@ class easy_logger_static {
       return path.data() + 0;
     return path.data() + (pos + 1);
   }
+
+  static constexpr std::string_view get_relative_path(std::string_view full_path) {
+#ifndef PROJECT_ROOT_DIR
+#  define PROJECT_ROOT_DIR ""
+#endif
+    constexpr auto root_len = std::string_view(PROJECT_ROOT_DIR).length();
+    if (full_path.starts_with(PROJECT_ROOT_DIR)) {
+      return full_path.substr(root_len + 1);
+    }
+    return full_path;
+  }
 };
 
 class easy_logger final : public easy_logger_static {
@@ -210,48 +221,54 @@ class easy_logger final : public easy_logger_static {
   {                                                                                                          \
     if (util::logger::easy_logger_static::should_log(spdlog::level::trace)) {                                \
       constexpr auto lg_sl = logger_source_location::current();                                              \
+      constexpr auto lg_rfn = util::logger::easy_logger_static::get_relative_path(lg_sl.file_name());        \
       util::logger::easy_logger::log(                                                                        \
-        {lg_sl.file_name(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::trace, msg, ##__VA_ARGS__); \
+        {lg_rfn.data(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::trace, msg, ##__VA_ARGS__);     \
     }                                                                                                        \
   }
 #define LOG_DEBUG(msg, ...)                                                                                  \
   {                                                                                                          \
     if (util::logger::easy_logger_static::should_log(spdlog::level::debug)) {                                \
       constexpr auto lg_sl = logger_source_location::current();                                              \
+      constexpr auto lg_rfn = util::logger::easy_logger_static::get_relative_path(lg_sl.file_name());        \
       util::logger::easy_logger::log(                                                                        \
-        {lg_sl.file_name(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::debug, msg, ##__VA_ARGS__); \
+        {lg_rfn.data(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::debug, msg, ##__VA_ARGS__);     \
     }                                                                                                        \
   }
 #define LOG_INFO(msg, ...)                                                                                  \
   {                                                                                                         \
     if (util::logger::easy_logger_static::should_log(spdlog::level::info)) {                                \
       constexpr auto lg_sl = logger_source_location::current();                                             \
+      constexpr auto lg_rfn = util::logger::easy_logger_static::get_relative_path(lg_sl.file_name());       \
       util::logger::easy_logger::log(                                                                       \
-        {lg_sl.file_name(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::info, msg, ##__VA_ARGS__); \
+        {lg_rfn.data(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::info, msg, ##__VA_ARGS__);     \
     }                                                                                                       \
   }
 #define LOG_WARN(msg, ...)                                                                                  \
   {                                                                                                         \
     if (util::logger::easy_logger_static::should_log(spdlog::level::warn)) {                                \
       constexpr auto lg_sl = logger_source_location::current();                                             \
+      constexpr auto lg_rfn = util::logger::easy_logger_static::get_relative_path(lg_sl.file_name());       \
       util::logger::easy_logger::log(                                                                       \
-        {lg_sl.file_name(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::warn, msg, ##__VA_ARGS__); \
+        {lg_rfn.data(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::warn, msg, ##__VA_ARGS__);     \
     }                                                                                                       \
   }
 #define LOG_ERROR(msg, ...)                                                                                \
   {                                                                                                        \
     if (util::logger::easy_logger_static::should_log(spdlog::level::err)) {                                \
       constexpr auto lg_sl = logger_source_location::current();                                            \
+      constexpr auto lg_rfn = util::logger::easy_logger_static::get_relative_path(lg_sl.file_name());      \
       util::logger::easy_logger::log(                                                                      \
-        {lg_sl.file_name(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::err, msg, ##__VA_ARGS__); \
+        {lg_rfn.data(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::err, msg, ##__VA_ARGS__);     \
     }                                                                                                      \
   }
 #define LOG_CRIT(msg, ...)                                                                                      \
   {                                                                                                             \
     if (util::logger::easy_logger_static::should_log(spdlog::level::critical)) {                                \
       constexpr auto lg_sl = logger_source_location::current();                                                 \
+      constexpr auto lg_rfn = util::logger::easy_logger_static::get_relative_path(lg_sl.file_name());           \
       util::logger::easy_logger::log(                                                                           \
-        {lg_sl.file_name(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::critical, msg, ##__VA_ARGS__); \
+        {lg_rfn.data(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::critical, msg, ##__VA_ARGS__);     \
     }                                                                                                           \
   }
 
@@ -260,8 +277,9 @@ class easy_logger final : public easy_logger_static {
   {                                                                                                          \
     if (util::logger::easy_logger_static::should_log(spdlog::level::trace)) {                                \
       constexpr auto lg_sl = logger_source_location::current();                                              \
+      constexpr auto lg_rfn = util::logger::easy_logger_static::get_relative_path(lg_sl.file_name());        \
       util::logger::easy_logger::print(                                                                      \
-        {lg_sl.file_name(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::trace, msg, ##__VA_ARGS__); \
+        {lg_rfn.data(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::trace, msg, ##__VA_ARGS__);     \
     }                                                                                                        \
   }
 
@@ -269,40 +287,45 @@ class easy_logger final : public easy_logger_static {
   {                                                                                                          \
     if (util::logger::easy_logger_static::should_log(spdlog::level::debug)) {                                \
       constexpr auto lg_sl = logger_source_location::current();                                              \
+      constexpr auto lg_rfn = util::logger::easy_logger_static::get_relative_path(lg_sl.file_name());        \
       util::logger::easy_logger::print(                                                                      \
-        {lg_sl.file_name(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::debug, msg, ##__VA_ARGS__); \
+        {lg_rfn.data(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::debug, msg, ##__VA_ARGS__);     \
     }                                                                                                        \
   }
 #define PRINT_INFO(msg, ...)                                                                                \
   {                                                                                                         \
     if (util::logger::easy_logger_static::should_log(spdlog::level::info)) {                                \
       constexpr auto lg_sl = logger_source_location::current();                                             \
+      constexpr auto lg_rfn = util::logger::easy_logger_static::get_relative_path(lg_sl.file_name());       \
       util::logger::easy_logger::print(                                                                     \
-        {lg_sl.file_name(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::info, msg, ##__VA_ARGS__); \
+        {lg_rfn.data(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::info, msg, ##__VA_ARGS__);     \
     }                                                                                                       \
   }
 #define PRINT_WARN(msg, ...)                                                                                \
   {                                                                                                         \
     if (util::logger::easy_logger_static::should_log(spdlog::level::warn)) {                                \
       constexpr auto lg_sl = logger_source_location::current();                                             \
+      constexpr auto lg_rfn = util::logger::easy_logger_static::get_relative_path(lg_sl.file_name());       \
       util::logger::easy_logger::print(                                                                     \
-        {lg_sl.file_name(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::warn, msg, ##__VA_ARGS__); \
+        {lg_rfn.data(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::warn, msg, ##__VA_ARGS__);     \
     }                                                                                                       \
   }
 #define PRINT_ERROR(msg, ...)                                                                              \
   {                                                                                                        \
     if (util::logger::easy_logger_static::should_log(spdlog::level::err)) {                                \
       constexpr auto lg_sl = logger_source_location::current();                                            \
+      constexpr auto lg_rfn = util::logger::easy_logger_static::get_relative_path(lg_sl.file_name());      \
       util::logger::easy_logger::print(                                                                    \
-        {lg_sl.file_name(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::err, msg, ##__VA_ARGS__); \
+        {lg_rfn.data(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::err, msg, ##__VA_ARGS__);     \
     }                                                                                                      \
   }
 #define PRINT_CRIT(msg, ...)                                                                                    \
   {                                                                                                             \
     if (util::logger::easy_logger_static::should_log(spdlog::level::critical)) {                                \
       constexpr auto lg_sl = logger_source_location::current();                                                 \
+      constexpr auto lg_rfn = util::logger::easy_logger_static::get_relative_path(lg_sl.file_name());           \
       util::logger::easy_logger::print(                                                                         \
-        {lg_sl.file_name(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::critical, msg, ##__VA_ARGS__); \
+        {lg_rfn.data(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::critical, msg, ##__VA_ARGS__);     \
     }                                                                                                           \
   }
 
@@ -311,47 +334,53 @@ class easy_logger final : public easy_logger_static {
   {                                                                                                     \
     if (util::logger::easy_logger_static::should_log(spdlog::level::trace)) {                           \
       constexpr auto lg_sl = logger_source_location::current();                                         \
+      constexpr auto lg_rfn = util::logger::easy_logger_static::get_relative_path(lg_sl.file_name());   \
       util::logger::easy_logger::stm(                                                                   \
-        {lg_sl.file_name(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::trace, ##__VA_ARGS__); \
+        {lg_rfn.data(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::trace, ##__VA_ARGS__);     \
     }                                                                                                   \
   }
 #define STM_DEBUG(...)                                                                                  \
   {                                                                                                     \
     if (util::logger::easy_logger_static::should_log(spdlog::level::debug)) {                           \
       constexpr auto lg_sl = logger_source_location::current();                                         \
+      constexpr auto lg_rfn = util::logger::easy_logger_static::get_relative_path(lg_sl.file_name());   \
       util::logger::easy_logger::stm(                                                                   \
-        {lg_sl.file_name(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::debug, ##__VA_ARGS__); \
+        {lg_rfn.data(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::debug, ##__VA_ARGS__);     \
     }                                                                                                   \
   }
 #define STM_INFO(...)                                                                                  \
   {                                                                                                    \
     if (util::logger::easy_logger_static::should_log(spdlog::level::info)) {                           \
       constexpr auto lg_sl = logger_source_location::current();                                        \
+      constexpr auto lg_rfn = util::logger::easy_logger_static::get_relative_path(lg_sl.file_name());  \
       util::logger::easy_logger::stm(                                                                  \
-        {lg_sl.file_name(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::info, ##__VA_ARGS__); \
+        {lg_rfn.data(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::info, ##__VA_ARGS__);     \
     }                                                                                                  \
   }
 #define STM_WARN(msg, ...)                                                                             \
   {                                                                                                    \
     if (util::logger::easy_logger_static::should_log(spdlog::level::warn)) {                           \
       constexpr auto lg_sl = logger_source_location::current();                                        \
+      constexpr auto lg_rfn = util::logger::easy_logger_static::get_relative_path(lg_sl.file_name());  \
       util::logger::easy_logger::stm(                                                                  \
-        {lg_sl.file_name(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::warn, ##__VA_ARGS__); \
+        {lg_rfn.data(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::warn, ##__VA_ARGS__);     \
     }                                                                                                  \
   }
 #define STM_ERROR(msg, ...)                                                                           \
   {                                                                                                   \
     if (util::logger::easy_logger_static::should_log(spdlog::level::err)) {                           \
       constexpr auto lg_sl = logger_source_location::current();                                       \
+      constexpr auto lg_rfn = util::logger::easy_logger_static::get_relative_path(lg_sl.file_name()); \
       util::logger::easy_logger::stm(                                                                 \
-        {lg_sl.file_name(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::err, ##__VA_ARGS__); \
+        {lg_rfn.data(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::err, ##__VA_ARGS__);     \
     }                                                                                                 \
   }
 #define STM_CRIT(msg, ...)                                                                                 \
   {                                                                                                        \
     if (util::logger::easy_logger_static::should_log(spdlog::level::critical)) {                           \
       constexpr auto lg_sl = logger_source_location::current();                                            \
+      constexpr auto lg_rfn = util::logger::easy_logger_static::get_relative_path(lg_sl.file_name());      \
       util::logger::easy_logger::stm(                                                                      \
-        {lg_sl.file_name(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::critical, ##__VA_ARGS__); \
+        {lg_rfn.data(), lg_sl.line(), lg_sl.function_name()}, spdlog::level::critical, ##__VA_ARGS__); \
     }                                                                                                      \
   }
